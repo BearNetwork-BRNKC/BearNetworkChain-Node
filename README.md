@@ -12,7 +12,7 @@ BearNetworkChain-Node 的設計專注於提升區塊鏈運行的速度與安全�
 
 #### 熊網鏈唯一推薦使用Docker進行佈署節點
 
-在您的電腦上啟動並運行以太坊的最快方法之一是使用Docker:
+在您的Ubuntu上啟動並運行以太坊的最快方法之一是使用Docker:
 
 1.下載官方快速安裝指令文件 setup-node.sh : 
 
