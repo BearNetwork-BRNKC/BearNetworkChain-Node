@@ -48,6 +48,19 @@ sudo docker exec -it backup-node /bin/sh -c "cd /node && geth --datadir brnkc01 
 
 整個過程都是複製貼上就完成，唯一要調整的部份就是你的主機用戶名稱會所有不同(/home/用戶名稱/backup-node)，因此只要在第四步那個部份依照你的路徑修改一下 -v 路逕指令內容，後續步驟都是複製貼上就可以。
 
+另外我們會更建議使用Portainer來管理Docker容器，因此在Docker裡先佈署一個Portainer來管理Docker容器會更好更方便。
+
+Portainer安裝方式 : (防火牆要開啟 sudo ufw allow 9001/tcp )
+```shell
+docker run -d \
+  -p 9001:9001 \
+  --name portainer_agent \
+  --restart=always \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v /var/lib/docker/volumes:/var/lib/docker/volumes \
+  -v /:/host \
+  portainer/agent:2.21.5
+```
 
 
 ### 熊網鏈節點setup-node.sh內容 (此內容是公開展示的，與下載的setup-node.sh內容相同)
