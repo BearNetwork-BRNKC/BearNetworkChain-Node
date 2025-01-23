@@ -12,58 +12,63 @@ BearNetworkChain-Node 的設計專注於提升區塊鏈運行的速度與安全�
 
 在您的Ubuntu上啟動並運行以太坊的最快方法之一是使用Docker:
 
-1.下載官方快速安裝指令文件 setup-node.sh : 
+1.先創建一個資料夾，依後續指令會用到的資料夾示範為例 :
 
 ```shell
-sudo wget -q https://raw.githubusercontent.com/BearNetwork-BRNKC/genesis/main/setup-node.sh -O /home/setup-node.sh
+創建名稱為: backup-node 的資料夾。
 ```
 
-2.在/home所在位置執行指令:
+2.進到backup-node的資料夾下載官方快速安裝指令文件 setup-node.sh : 
+
+```shell
+sudo wget -q https://raw.githubusercontent.com/BearNetwork-BRNKC/genesis/main/setup-node.sh -O
+```
+
+3.在/home所在位置執行指令:
 ```shell
 sudo chmod +x setup-node.sh && sudo ./setup-node.sh
 ```
 
-如果要在/home裡刪除setup-node.sh文件與backup-node資料夾，請使用這個指令 : 
-
+4.拉取映像檔並且創建容器，其中 -v /home/brnkc/backup-node:/node 的部份要改成你現在backup-node資料夾正確的路徑。(本機資料夾路徑:Docker路徑，這是本機與Docker資料夾映射關係)
 ```shell
-sudo rm -f /home/setup-node.sh && sudo rm -rf /home/backup-node
+sudo docker run -d -it --restart unless-stopped --name backup-node --network brnkc --ip 172.20.0.5 -v /home/brnkc/backup-node:/node -p 8545:8545 -p 30303:30303 -p 55555:55555 --entrypoint /bin/sh bearnetworkchain/brnkc-node:v1.13.15
 ```
+
+5.佈署熊網鏈創世文件 :
+```shell
+sudo docker exec -it backup-node /bin/sh -c "cd /node && geth --datadir brnkc01 init genesis.json"
+```
+
+6.啟動節點 :
+```shell
+sudo docker exec -it backup-node /bin/sh -c "cd /node && geth --datadir brnkc01 init genesis.json && geth --config config.toml --identity \"bearnetwork\" --datadir brnkc01 --http --http.addr 172.20.0.5 --port 30303 --http.corsdomain \"*\" --http.port 8545 --networkid 641230 --nat any --http.api debug,web3,eth,txpool,personal,clique,miner,net --ws --ws.port 55555 --ws.addr 172.20.0.5 --ws.origins \"*\" --ws.api web3,eth --syncmode full --gcmode=archive --nodiscover --http.vhosts=\"*\" --allow-insecure-unlock console"
+```
+
+7. 完成。
+
+整個過程都是複製貼上就完成，唯一要調整的部份就是你的主機用戶名稱會所有不同(/home/用戶名稱/backup-node)，因此只要在第四步那個部份依照你的路徑修改一下 -v 路逕指令內容，後續步驟都是複製貼上就可以。
+
 
 
 ### 熊網鏈節點setup-node.sh內容 (此內容是公開展示的，與下載的setup-node.sh內容相同)
 ```shell
 #!/bin/sh
 
-# 1. 創建目錄並設置權限
-sudo mkdir -p /home/backup-node/brnkc01 && sudo chmod -R 777 /home/backup-node
+# 2.. 下載 genesis.json 和 config.toml
+echo "下載 genesis.json 和 config.toml..."
+wget -q https://raw.githubusercontent.com/BearNetwork-BRNKC/genesis/main/genesis.json
+wget -q https://raw.githubusercontent.com/BearNetwork-BRNKC/genesis/main/config.toml
 
-# 2. 下載 genesis.json 和 config.toml
-wget -q https://raw.githubusercontent.com/BearNetwork-BRNKC/genesis/main/genesis.json -O /home/backup-node/genesis.json
-wget -q https://raw.githubusercontent.com/BearNetwork-BRNKC/genesis/main/config.toml -O /home/backup-node/config.toml
-
-# 3. 設置防火牆端口
+# 2. 設置防火牆端口
+echo "設置防火牆端口..."
 sudo ufw allow 8545/tcp
 sudo ufw allow 30303/tcp
 sudo ufw allow 55555/tcp
 sudo ufw --force enable
 
-# 4. 創建 Docker 網路
+# 3. 創建 Docker 網路（如果已存在則忽略錯誤）
+echo "創建 Docker 網路..."
 sudo docker network create -d bridge --subnet=172.20.0.0/16 brnkc || true
-
-# 5. 拉取映像並創建容器
-sudo docker run -dit --restart unless-stopped --name backup-node --network brnkc --ip 172.20.0.5 \
-  -v /home/backup-node:/node -p 8545:8545 -p 30303:30303 -p 55555:55555 \
-  bearnetworkchain/brnkc-node:v1.13.15 bash
-
-# 6. 進入容器並初始化 Geth
-sudo docker exec backup-node geth --datadir /node/brnkc01 init /node/genesis.json
-
-# 7. 啟動 Geth 節點
-sudo docker exec -d backup-node geth --config /node/config.toml --identity 'bearnetwork' --datadir /node/brnkc01 \
-  --http --http.addr 172.20.0.5 --port 30303 --http.corsdomain '*' --http.port 8545 \
-  --networkid 641230 --nat any --http.api debug,web3,eth,txpool,personal,clique,miner,net \
-  --ws --ws.port 55555 --ws.addr 172.20.0.5 --ws.origins '*' --ws.api web3,eth \
-  --syncmode full --gcmode=archive --nodiscover --http.vhosts=* --allow-insecure-unlock console
 
 ```
 
