@@ -1,19 +1,3 @@
-// Copyright 2017 The go-ethereum Authors
-// This file is part of the go-ethereum library.
-//
-// The go-ethereum library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// The go-ethereum library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
-
 package core
 
 import (
@@ -30,24 +14,24 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 )
 
-// Runs multiple tests with randomized parameters.
+// 使用隨機參數執行多個測試。
 func TestChainIndexerSingle(t *testing.T) {
 	for i := 0; i < 10; i++ {
 		testChainIndexer(t, 1)
 	}
 }
 
-// Runs multiple tests with randomized parameters and different number of
-// chain backends.
+// 使用隨機參數和不同數量執行多個測試
+// 鏈後端.
 func TestChainIndexerWithChildren(t *testing.T) {
 	for i := 2; i < 8; i++ {
 		testChainIndexer(t, i)
 	}
 }
 
-// testChainIndexer runs a test with either a single chain indexer or a chain of
-// multiple backends. The section size and required confirmation count parameters
-// are randomized.
+//testChainIndexer 使用單一鏈索引器或鏈索引器執行測試
+//多個後端。部分大小和所需的確認計數參數
+//是隨機的。
 func testChainIndexer(t *testing.T, count int) {
 	db := rawdb.NewMemoryDatabase()
 	defer db.Close()
@@ -121,13 +105,13 @@ func testChainIndexer(t *testing.T, count int) {
 	for i := uint64(1001); i <= 1500; i++ {
 		inject(i)
 	}
-	// Failed processing scenario where less blocks are available than notified
+	// 失敗的處理場景，可用區塊少於通知的區塊
 	notify(2000, 1500, false)
 
-	// Notify about a reorg (which could have caused the missing blocks if happened during processing)
+	// 通知重組（如果在處理過程中發生重組，可能會導致區塊遺失）
 	notify(1500, 1500, true)
 
-	// Create new fork
+	// 創建新的分叉
 	for i := uint64(1501); i <= 2000; i++ {
 		inject(i)
 		notify(i, i, false)
@@ -156,9 +140,9 @@ func (b *testChainIndexBackend) assertSections() {
 	b.t.Fatalf("Canonical section count mismatch: have %v, want %v", sections, b.stored)
 }
 
-// assertBlocks expects processing calls after new blocks have arrived. If the
-// failNum < headNum then we are simulating a scenario where a reorg has happened
-// after the processing has started and the processing of a section fails.
+//assertBlocks 期望在新區塊到達後處理呼叫。如果
+//failNum < headNum 那麼我們正在模擬發生重組的場景
+//處理開始後，某部分的處理失敗。
 func (b *testChainIndexBackend) assertBlocks(headNum, failNum uint64) (uint64, bool) {
 	var sections uint64
 	if headNum >= b.indexer.confirmsReq {

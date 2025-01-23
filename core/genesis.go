@@ -1,19 +1,3 @@
-// Copyright 2014 The go-ethereum Authors
-// This file is part of the go-ethereum library.
-//
-// The go-ethereum library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// The go-ethereum library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
-
 package core
 
 import (
@@ -41,18 +25,18 @@ import (
 	"github.com/holiman/uint256"
 )
 
-//go:generate go run github.com/fjl/gencodec -type Genesis -field-override genesisSpecMarshaling -out gen_genesis.go
+//go：產生 go 運行 github.com/fjl/gencodec -type Genesis -field-override genesisSpecMarshaling -out gen_genesis.go
 
 var errGenesisNoConfig = errors.New("genesis has no chain configuration")
 
-// Deprecated: use types.GenesisAccount instead.
+// 已棄用：使用 types.GenesisAccount 代替。
 type GenesisAccount = types.Account
 
-// Deprecated: use types.GenesisAlloc instead.
+// 已棄用：使用 types.GenesisAlloc 代替。
 type GenesisAlloc = types.GenesisAlloc
 
-// Genesis specifies the header fields, state of a genesis block. It also defines hard
-// fork switch-over blocks through the chain configuration.
+//Genesis 指定創世區塊的標頭欄位和狀態。它也定義了硬
+//透過鏈配置分叉切換區塊。
 type Genesis struct {
 	Config     *params.ChainConfig `json:"config"`
 	Nonce      uint64              `json:"nonce"`
@@ -64,8 +48,8 @@ type Genesis struct {
 	Coinbase   common.Address      `json:"coinbase"`
 	Alloc      types.GenesisAlloc  `json:"alloc"      gencodec:"required"`
 
-	// These fields are used for consensus tests. Please don't use them
-	// in actual genesis blocks.
+	// 這些欄位用於共識測試。請不要使用它們
+	// 在實際的創世區塊中.
 	Number        uint64      `json:"number"`
 	GasUsed       uint64      `json:"gasUsed"`
 	ParentHash    common.Hash `json:"parentHash"`
@@ -78,24 +62,24 @@ func ReadGenesis(db ethdb.Database) (*Genesis, error) {
 	var genesis Genesis
 	stored := rawdb.ReadCanonicalHash(db, 0)
 	if (stored == common.Hash{}) {
-		return nil, fmt.Errorf("invalid genesis hash in database: %x", stored)
+		return nil, fmt.Errorf("資料庫中的創世哈希值無效: %x", stored)
 	}
 	blob := rawdb.ReadGenesisStateSpec(db, stored)
 	if blob == nil {
-		return nil, errors.New("genesis state missing from db")
+		return nil, errors.New("資料庫中缺少創世狀態")
 	}
 	if len(blob) != 0 {
 		if err := genesis.Alloc.UnmarshalJSON(blob); err != nil {
-			return nil, fmt.Errorf("could not unmarshal genesis state json: %s", err)
+			return nil, fmt.Errorf("無法解組創世狀態 json: %s", err)
 		}
 	}
 	genesis.Config = rawdb.ReadChainConfig(db, stored)
 	if genesis.Config == nil {
-		return nil, errors.New("genesis config missing from db")
+		return nil, errors.New("資料庫中缺少創世配置")
 	}
 	genesisBlock := rawdb.ReadBlock(db, stored, 0)
 	if genesisBlock == nil {
-		return nil, errors.New("genesis block missing from db")
+		return nil, errors.New("資料庫中缺少創世區塊")
 	}
 	genesisHeader := genesisBlock.Header()
 	genesis.Nonce = genesisHeader.Nonce.Uint64()
@@ -112,11 +96,11 @@ func ReadGenesis(db ethdb.Database) (*Genesis, error) {
 	return &genesis, nil
 }
 
-// hashAlloc computes the state root according to the genesis specification.
+// hashAlloc 根據創世規範計算狀態根。
 func hashAlloc(ga *types.GenesisAlloc, isVerkle bool) (common.Hash, error) {
-	// If a genesis-time verkle trie is requested, create a trie config
-	// with the verkle trie enabled so that the tree can be initialized
-	// as such.
+    //如果請求創世時間 verkle trie，則建立一個 trie 配置
+	//啟用 verkle trie 以便可以初始化樹
+	//像這樣。
 	var config *triedb.Config
 	if isVerkle {
 		config = &triedb.Config{
@@ -124,8 +108,8 @@ func hashAlloc(ga *types.GenesisAlloc, isVerkle bool) (common.Hash, error) {
 			IsVerkle: true,
 		}
 	}
-	// Create an ephemeral in-memory database for computing hash,
-	// all the derived states will be discarded to not pollute disk.
+	// 建立一個臨時記憶體資料庫用於計算哈希值，
+	// 所有派生狀態將被丟棄，以免污染磁碟。
 	db := state.NewDatabaseWithConfig(rawdb.NewMemoryDatabase(), config)
 	statedb, err := state.New(types.EmptyRootHash, db, nil)
 	if err != nil {
@@ -144,9 +128,9 @@ func hashAlloc(ga *types.GenesisAlloc, isVerkle bool) (common.Hash, error) {
 	return statedb.Commit(0, false)
 }
 
-// flushAlloc is very similar with hash, but the main difference is all the generated
-// states will be persisted into the given database. Also, the genesis state
-// specification will be flushed as well.
+//flushAlloc與hash非常相似，但主要區別在於所有生成的
+//狀態將被保存到給定的資料庫中。另外，創世狀態
+//規範也將被刷新。
 func flushAlloc(ga *types.GenesisAlloc, db ethdb.Database, triedb *triedb.Database, blockhash common.Hash) error {
 	statedb, err := state.New(types.EmptyRootHash, state.NewDatabaseWithNodeDB(db, triedb), nil)
 	if err != nil {
@@ -166,13 +150,13 @@ func flushAlloc(ga *types.GenesisAlloc, db ethdb.Database, triedb *triedb.Databa
 	if err != nil {
 		return err
 	}
-	// Commit newly generated states into disk if it's not empty.
+	// 如果磁碟不為空，則將新產生的狀態提交到磁碟中。
 	if root != types.EmptyRootHash {
 		if err := triedb.Commit(root, true); err != nil {
 			return err
 		}
 	}
-	// Marshal the genesis state specification and persist.
+	// 整理創世狀態規範並堅持下去。
 	blob, err := json.Marshal(ga)
 	if err != nil {
 		return err
@@ -181,7 +165,7 @@ func flushAlloc(ga *types.GenesisAlloc, db ethdb.Database, triedb *triedb.Databa
 	return nil
 }
 
-// field type overrides for gencodec
+// gencodec 的字段類型覆蓋
 type genesisSpecMarshaling struct {
 	Nonce         math.HexOrDecimal64
 	Timestamp     math.HexOrDecimal64
@@ -196,35 +180,35 @@ type genesisSpecMarshaling struct {
 	BlobGasUsed   *math.HexOrDecimal64
 }
 
-// GenesisMismatchError is raised when trying to overwrite an existing
-// genesis block with an incompatible one.
+//當嘗試覆蓋現有的時會引發 GenesisMismatchError
+//具有不相容的創世塊。
 type GenesisMismatchError struct {
 	Stored, New common.Hash
 }
 
 func (e *GenesisMismatchError) Error() string {
-	return fmt.Sprintf("database contains incompatible genesis (have %x, new %x)", e.Stored, e.New)
+	return fmt.Sprintf("資料庫包含不相容的起源 (有 %x, 新的 %x)", e.Stored, e.New)
 }
 
-// ChainOverrides contains the changes to chain config.
+//ChainOverrides 包含對鏈配置的變更。
 type ChainOverrides struct {
 	OverrideCancun *uint64
 	OverrideVerkle *uint64
 }
 
-// SetupGenesisBlock writes or updates the genesis block in db.
-// The block that will be used is:
+//SetupGenesisBlock 在 db 中寫入或更新創世區塊。
+//將要使用的區塊是：
 //
-//	                     genesis == nil       genesis != nil
-//	                  +------------------------------------------
-//	db has no genesis |  main-net default  |  genesis
-//	db has genesis    |  from DB           |  genesis (if compatible)
+//創世 == nil 創世 != nil
+//+--------------------------------------------------------
+//db 沒有起源 |  主網預設 |  起源
+//db 有創世 |  來自資料庫 |  起源（如果相容）
 //
-// The stored chain configuration will be updated if it is compatible (i.e. does not
-// specify a fork block below the local head block). In case of a conflict, the
-// error is a *params.ConfigCompatError and the new, unwritten config is returned.
+//如果相容（即不相容），則儲存鏈配置將會更新
+//在本機頭區塊下方指定一個分叉區塊）。如果發生衝突，
+//錯誤是 *params.ConfigCompatError 並且傳回新的、未寫入的配置。
 //
-// The returned chain configuration is never nil.
+//傳回的鏈配置永遠不會為零。
 func SetupGenesisBlock(db ethdb.Database, triedb *triedb.Database, genesis *Genesis) (*params.ChainConfig, common.Hash, error) {
 	return SetupGenesisBlockWithOverride(db, triedb, genesis, nil)
 }
@@ -243,14 +227,14 @@ func SetupGenesisBlockWithOverride(db ethdb.Database, triedb *triedb.Database, g
 			}
 		}
 	}
-	// Just commit the new block if there is no stored genesis block.
+	// 如果沒有儲存的創世區塊，只需提交新區塊。
 	stored := rawdb.ReadCanonicalHash(db, 0)
 	if (stored == common.Hash{}) {
 		if genesis == nil {
-			log.Info("Writing default main-net genesis block")
+			log.Info("編寫預設主網創世區塊")
 			genesis = DefaultGenesisBlock()
 		} else {
-			log.Info("Writing custom genesis block")
+			log.Info("編寫自訂創世區塊")
 		}
 		applyOverrides(genesis.Config)
 		block, err := genesis.Commit(db, triedb)
@@ -259,17 +243,17 @@ func SetupGenesisBlockWithOverride(db ethdb.Database, triedb *triedb.Database, g
 		}
 		return genesis.Config, block.Hash(), nil
 	}
-	// The genesis block is present(perhaps in ancient database) while the
-	// state database is not initialized yet. It can happen that the node
-	// is initialized with an external ancient store. Commit genesis state
-	// in this case.
+    //創世區塊存在（可能在古代資料庫中），而
+	//狀態資料庫尚未初始化。節點可能會發生這樣的情況
+	//使用外部古代儲存進行初始化。提交創世狀態
+	//在這種情況下。
 	header := rawdb.ReadHeader(db, stored, 0)
 	if header.Root != types.EmptyRootHash && !triedb.Initialized(header.Root) {
 		if genesis == nil {
 			genesis = DefaultGenesisBlock()
 		}
 		applyOverrides(genesis.Config)
-		// Ensure the stored genesis matches with the given one.
+		// 確保存儲的起源與給定的起源匹配。
 		hash := genesis.ToBlock().Hash()
 		if hash != stored {
 			return genesis.Config, hash, &GenesisMismatchError{stored, hash}
@@ -280,7 +264,7 @@ func SetupGenesisBlockWithOverride(db ethdb.Database, triedb *triedb.Database, g
 		}
 		return genesis.Config, block.Hash(), nil
 	}
-	// Check whether the genesis block is already written.
+	// 檢查創世塊是否已經寫入。
 	if genesis != nil {
 		applyOverrides(genesis.Config)
 		hash := genesis.ToBlock().Hash()
@@ -288,7 +272,7 @@ func SetupGenesisBlockWithOverride(db ethdb.Database, triedb *triedb.Database, g
 			return genesis.Config, hash, &GenesisMismatchError{stored, hash}
 		}
 	}
-	// Get the existing chain configuration.
+	// 取得現有的鏈配置。
 	newcfg := genesis.configOrDefault(stored)
 	applyOverrides(newcfg)
 	if err := newcfg.CheckConfigForkOrder(); err != nil {
@@ -296,25 +280,25 @@ func SetupGenesisBlockWithOverride(db ethdb.Database, triedb *triedb.Database, g
 	}
 	storedcfg := rawdb.ReadChainConfig(db, stored)
 	if storedcfg == nil {
-		log.Warn("Found genesis block without chain config")
+		log.Warn("找到沒有鏈結配置的創世塊")
 		rawdb.WriteChainConfig(db, stored, newcfg)
 		return newcfg, stored, nil
 	}
 	storedData, _ := json.Marshal(storedcfg)
-	// Special case: if a private network is being used (no genesis and also no
-	// mainnet hash in the database), we must not apply the `configOrDefault`
-	// chain config as that would be AllProtocolChanges (applying any new fork
-	// on top of an existing private network genesis block). In that case, only
-	// apply the overrides.
+    //特殊情況：如果正在使用專用網路（沒有創世，也沒有
+	//資料庫中的主網雜湊），我們不能應用 `configOrDefault`
+	//鏈配置，因為這將是 AllProtocolChanges （應用任何新的分叉
+	//在現有的私有網路創世塊之上）。在這種情況下，只有
+	//套用覆蓋。
 	if genesis == nil && stored != params.MainnetGenesisHash {
 		newcfg = storedcfg
 		applyOverrides(newcfg)
 	}
-	// Check config compatibility and write the config. Compatibility errors
-	// are returned to the caller unless we're already at block zero.
+    //檢查配置相容性並寫入配置。相容性錯誤
+	//除非我們已經在區塊零，否則回傳給呼叫者。
 	head := rawdb.ReadHeadHeader(db)
 	if head == nil {
-		return newcfg, stored, errors.New("missing head header")
+		return newcfg, stored, errors.New("缺少頭部標頭")
 	}
 	compatErr := storedcfg.CheckCompatible(newcfg, head.Number.Uint64(), head.Time)
 	if compatErr != nil && ((head.Number.Uint64() != 0 && compatErr.RewindToBlock != 0) || (head.Time != 0 && compatErr.RewindToTime != 0)) {
@@ -327,12 +311,12 @@ func SetupGenesisBlockWithOverride(db ethdb.Database, triedb *triedb.Database, g
 	return newcfg, stored, nil
 }
 
-// LoadChainConfig loads the stored chain config if it is already present in
-// database, otherwise, return the config in the provided genesis specification.
+//LoadChainConfig 載入儲存的鏈配置（如果它已經存在於
+//資料庫，否則傳回提供的創世規範中的配置。
 func LoadChainConfig(db ethdb.Database, genesis *Genesis) (*params.ChainConfig, error) {
-	// Load the stored chain config from the database. It can be nil
-	// in case the database is empty. Notably, we only care about the
-	// chain config corresponds to the canonical chain.
+    //從資料庫載入儲存的鏈配置。它可以為零
+	//如果資料庫為空。值得注意的是，我們只關心
+	//鏈配置對應於規範鏈。
 	stored := rawdb.ReadCanonicalHash(db, 0)
 	if stored != (common.Hash{}) {
 		storedcfg := rawdb.ReadChainConfig(db, stored)
@@ -340,23 +324,23 @@ func LoadChainConfig(db ethdb.Database, genesis *Genesis) (*params.ChainConfig, 
 			return storedcfg, nil
 		}
 	}
-	// Load the config from the provided genesis specification
+	// 從提供的創世規範加載配置
 	if genesis != nil {
-		// Reject invalid genesis spec without valid chain config
+		// 拒絕沒有有效鏈配置的無效創世規範
 		if genesis.Config == nil {
 			return nil, errGenesisNoConfig
 		}
-		// If the canonical genesis header is present, but the chain
-		// config is missing(initialize the empty leveldb with an
-		// external ancient chain segment), ensure the provided genesis
-		// is matched.
+        //如果存在規範的創世標頭，但存在鏈
+		//配置遺失（用一個初始化空的 leveldb
+		//外部古鏈段），確保提供的創世
+		//已符合。
 		if stored != (common.Hash{}) && genesis.ToBlock().Hash() != stored {
 			return nil, &GenesisMismatchError{stored, genesis.ToBlock().Hash()}
 		}
 		return genesis.Config, nil
 	}
-	// There is no stored chain config and no new config provided,
-	// In this case the default chain config(mainnet) will be used
+    //沒有儲存鏈配置，也沒有提供新配置，
+	//在這種情況下，將使用預設的鏈配置（主網）
 	return params.MainnetChainConfig, nil
 }
 
@@ -486,16 +470,16 @@ func (g *Genesis) MustCommit(db ethdb.Database, triedb *triedb.Database) *types.
 	return block
 }
 
-// DefaultGenesisBlock returns the Ethereum main net genesis block.
+// DefaultGenesisBlock 返回熊網鏈主網創世區塊。
 func DefaultGenesisBlock() *Genesis {
 	return &Genesis{
 		Config:     params.MainnetChainConfig,
-		Nonce:      66,
-		ExtraData:  hexutil.MustDecode("0x11bbe8db4e347b4e8c937c1c8370e4b5ed33adb3db69cbdb7a38e1e50b1b82fa"),
-		GasLimit:   5000,
-		Difficulty: big.NewInt(17179869184),
+		Nonce:      0x0,
+		ExtraData:  hexutil.MustDecode("0x000000000000000000000000000000000000000000000000000000000000000021bfd38bd940de486aa4d64a85b08d47b25ccc180000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"),
+		GasLimit:   0x3d0900,
+		Difficulty: big.NewInt(0x1),
 		Alloc:      decodePrealloc(mainnetAllocData),
-	}
+	}	
 }
 
 // DefaultGoerliGenesisBlock returns the Görli network genesis block.

@@ -2,10 +2,6 @@
 
 set -e -x
 
-# Note: this script is meant to be run in a Debian/Ubuntu docker container,
-# as user 'root'.
-
-# Install the required tools for creating source packages.
 apt-get -yq --no-install-suggests --no-install-recommends install\
      devscripts debhelper dput fakeroot
 

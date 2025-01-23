@@ -1,6 +1,6 @@
-## Go Ethereum
+## BearNetworkChain-Node
 
-Golang execution layer implementation of the Ethereum protocol.
+以太坊協定的Golang執行層實作。
 
 [![API Reference](
 https://pkg.go.dev/badge/github.com/ethereum/go-ethereum
@@ -9,30 +9,30 @@ https://pkg.go.dev/badge/github.com/ethereum/go-ethereum
 [![Travis](https://app.travis-ci.com/ethereum/go-ethereum.svg?branch=master)](https://app.travis-ci.com/github/ethereum/go-ethereum)
 [![Discord](https://img.shields.io/badge/discord-join%20chat-blue.svg)](https://discord.gg/nthXNEv)
 
-Automated builds are available for stable releases and the unstable master branch. Binary
-archives are published at https://geth.ethereum.org/downloads/.
+自動化建置可用於穩定版本和不穩定的主分支。二進位
+檔案發佈於 https://geth.ethereum.org/downloads/.
 
-## Building the source
+## 建構原始碼
 
-For prerequisites and detailed build instructions please read the [Installation Instructions](https://geth.ethereum.org/docs/getting-started/installing-geth).
+有關先決條件和詳細構建說明，請閱讀[安裝說明](https://geth.ethereum.org/docs/getting-started/installing-geth).
 
-Building `geth` requires both a Go (version 1.19 or later) and a C compiler. You can install
-them using your favourite package manager. Once the dependencies are installed, run
+建置 `geth` 需要 Go（版本 1.19 或更高版本）和 C 編譯器。 您可以安裝
+他們使用您最喜歡的套件管理器。安裝依賴項後，執行
 
 ```shell
 make geth
 ```
 
-or, to build the full suite of utilities:
+或者，建立全套實用程式：
 
 ```shell
 make all
 ```
 
-## Executables
+## 執行檔
 
-The go-ethereum project comes with several wrappers/executables found in the `cmd`
-directory.
+go-ethereum 專案附帶了在“cmd”中找到的幾個包裝器/可執行文件
+目錄。
 
 |  Command   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | :--------: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

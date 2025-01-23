@@ -1,19 +1,3 @@
-// Copyright 2016 The go-ethereum Authors
-// This file is part of the go-ethereum library.
-//
-// The go-ethereum library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// The go-ethereum library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
-
 package params
 
 import (
@@ -37,31 +21,31 @@ func newUint64(val uint64) *uint64 { return &val }
 var (
 	MainnetTerminalTotalDifficulty, _ = new(big.Int).SetString("58_750_000_000_000_000_000_000", 0)
 
-	// MainnetChainConfig is the chain parameters to run a node on the main network.
+	// MainnetChainConfig 是在主網上運行節點的鏈參數。
 	MainnetChainConfig = &ChainConfig{
-		ChainID:                       big.NewInt(1),
-		HomesteadBlock:                big.NewInt(1_150_000),
-		DAOForkBlock:                  big.NewInt(1_920_000),
-		DAOForkSupport:                true,
-		EIP150Block:                   big.NewInt(2_463_000),
-		EIP155Block:                   big.NewInt(2_675_000),
-		EIP158Block:                   big.NewInt(2_675_000),
-		ByzantiumBlock:                big.NewInt(4_370_000),
-		ConstantinopleBlock:           big.NewInt(7_280_000),
-		PetersburgBlock:               big.NewInt(7_280_000),
-		IstanbulBlock:                 big.NewInt(9_069_000),
-		MuirGlacierBlock:              big.NewInt(9_200_000),
-		BerlinBlock:                   big.NewInt(12_244_000),
-		LondonBlock:                   big.NewInt(12_965_000),
-		ArrowGlacierBlock:             big.NewInt(13_773_000),
-		GrayGlacierBlock:              big.NewInt(15_050_000),
-		TerminalTotalDifficulty:       MainnetTerminalTotalDifficulty, // 58_750_000_000_000_000_000_000
-		TerminalTotalDifficultyPassed: true,
-		ShanghaiTime:                  newUint64(1681338455),
-		CancunTime:                    newUint64(1710338135),
-		Ethash:                        new(EthashConfig),
+		ChainID:                       big.NewInt(641230),  // 這裡設置你的自定義 Chain ID
+		HomesteadBlock:                big.NewInt(0),        // 默認設為 0，若不需要升級支持
+		DAOForkBlock:                  big.NewInt(0),        // 默認設為 0
+		DAOForkSupport:                true,                  // 如果支持 DAO fork，設為 true
+		EIP150Block:                   big.NewInt(0),        // 默認設為 0
+		EIP155Block:                   big.NewInt(0),        // 默認設為 0
+		EIP158Block:                   big.NewInt(0),        // 默認設為 0
+		ByzantiumBlock:                big.NewInt(0),        // 默認設為 0
+		ConstantinopleBlock:           big.NewInt(0),        // 默認設為 0
+		PetersburgBlock:               big.NewInt(0),        // 默認設為 0
+		IstanbulBlock:                 big.NewInt(0),        // 默認設為 0
+		MuirGlacierBlock:              big.NewInt(0),        // 默認設為 0
+		BerlinBlock:                   big.NewInt(0),        // 默認設為 0
+		LondonBlock:                   big.NewInt(0),        // 默認設為 0
+		ArrowGlacierBlock:             big.NewInt(0),        // 默認設為 0
+		GrayGlacierBlock:              big.NewInt(0),        // 默認設為 0
+		TerminalTotalDifficulty:       MainnetTerminalTotalDifficulty,  // 若需要總難度，可以保持
+		TerminalTotalDifficultyPassed: true,                  // 若已通過，設為 true
+		ShanghaiTime:                  newUint64(0),        // 這些可以根據需求設置
+		CancunTime:                    newUint64(0),        // 這些可以根據需求設置
+		Ethash:                        new(EthashConfig),   // 這是默認的 Ethash 配置
 	}
-	// HoleskyChainConfig contains the chain parameters to run a node on the Holesky test network.
+	// HoleskyChainConfig 包含在 Holesky 測試網路上運行節點的鏈參數。
 	HoleskyChainConfig = &ChainConfig{
 		ChainID:                       big.NewInt(17000),
 		HomesteadBlock:                big.NewInt(0),
@@ -86,7 +70,7 @@ var (
 		CancunTime:                    newUint64(1707305664),
 		Ethash:                        new(EthashConfig),
 	}
-	// SepoliaChainConfig contains the chain parameters to run a node on the Sepolia test network.
+	// SepoliaChainConfig 包含在 Sepolia 測試網路上運行節點的鏈結參數。
 	SepoliaChainConfig = &ChainConfig{
 		ChainID:                       big.NewInt(11155111),
 		HomesteadBlock:                big.NewInt(0),
@@ -111,7 +95,7 @@ var (
 		CancunTime:                    newUint64(1706655072),
 		Ethash:                        new(EthashConfig),
 	}
-	// GoerliChainConfig contains the chain parameters to run a node on the Görli test network.
+	// GoerliChainConfig 包含在 Görli 測試網路上運行節點的鏈結參數。
 	GoerliChainConfig = &ChainConfig{
 		ChainID:                       big.NewInt(5),
 		HomesteadBlock:                big.NewInt(0),
@@ -137,8 +121,8 @@ var (
 			Epoch:  30000,
 		},
 	}
-	// AllEthashProtocolChanges contains every protocol change (EIPs) introduced
-	// and accepted by the Ethereum core developers into the Ethash consensus.
+    //AllEthashProtocolChanges 包含引入的每個協定變更 (EIP)
+	//並被以太坊核心開發人員接受並納入 Ethash 共識。
 	AllEthashProtocolChanges = &ChainConfig{
 		ChainID:                       big.NewInt(1337),
 		HomesteadBlock:                big.NewInt(0),
@@ -187,8 +171,8 @@ var (
 		TerminalTotalDifficultyPassed: true,
 	}
 
-	// AllCliqueProtocolChanges contains every protocol change (EIPs) introduced
-	// and accepted by the Ethereum core developers into the Clique consensus.
+    //AllCliqueProtocolChanges 包含引入的每個協定變更 (EIP)
+	//並被以太坊核心開發人員接受並納入 Clique 共識。
 	AllCliqueProtocolChanges = &ChainConfig{
 		ChainID:                       big.NewInt(1337),
 		HomesteadBlock:                big.NewInt(0),
@@ -217,8 +201,8 @@ var (
 		Clique:                        &CliqueConfig{Period: 0, Epoch: 30000},
 	}
 
-	// TestChainConfig contains every protocol change (EIPs) introduced
-	// and accepted by the Ethereum core developers for testing purposes.
+    //TestChainConfig 包含引入的每個協定變更 (EIP)
+	//並被以太坊核心開發人員接受用於測試目的。
 	TestChainConfig = &ChainConfig{
 		ChainID:                       big.NewInt(1),
 		HomesteadBlock:                big.NewInt(0),
@@ -247,8 +231,8 @@ var (
 		Clique:                        nil,
 	}
 
-	// MergedTestChainConfig contains every protocol change (EIPs) introduced
-	// and accepted by the Ethereum core developers for testing purposes.
+    //MergedTestChainConfig 包含引入的每個協定變更 (EIP)
+	//並被以太坊核心開發人員接受用於測試目的。
 	MergedTestChainConfig = &ChainConfig{
 		ChainID:                       big.NewInt(1),
 		HomesteadBlock:                big.NewInt(0),
@@ -277,8 +261,8 @@ var (
 		Clique:                        nil,
 	}
 
-	// NonActivatedConfig defines the chain configuration without activating
-	// any protocol change (EIPs).
+    //NonActivatedConfig 定義不啟動的鏈配置
+	//任何協定變更 (EIP)。
 	NonActivatedConfig = &ChainConfig{
 		ChainID:                       big.NewInt(1),
 		HomesteadBlock:                nil,
@@ -309,26 +293,26 @@ var (
 	TestRules = TestChainConfig.Rules(new(big.Int), false, 0)
 )
 
-// NetworkNames are user friendly names to use in the chain spec banner.
+// NetworkNames 是在鏈規範橫幅中使用的使用者友好名稱。
 var NetworkNames = map[string]string{
-	MainnetChainConfig.ChainID.String(): "mainnet",
+	MainnetChainConfig.ChainID.String(): "BearNetworkChain MainNet",
 	GoerliChainConfig.ChainID.String():  "goerli",
 	SepoliaChainConfig.ChainID.String(): "sepolia",
 	HoleskyChainConfig.ChainID.String(): "holesky",
 }
 
-// ChainConfig is the core config which determines the blockchain settings.
+//ChainConfig 是決定區塊鏈設定的核心配置。
 //
-// ChainConfig is stored in the database on a per block basis. This means
-// that any network, identified by its genesis block, can have its own
-// set of configuration options.
+//ChainConfig 以每個區塊為基礎儲存在資料庫中。這意味著
+//任何由其創世塊標識的網路都可以擁有自己的
+//配置選項集。
 type ChainConfig struct {
-	ChainID *big.Int `json:"chainId"` // chainId identifies the current chain and is used for replay protection
+	ChainID *big.Int `json:"chainId"` // chainId標識目前鏈，用於重播保護
 
-	HomesteadBlock *big.Int `json:"homesteadBlock,omitempty"` // Homestead switch block (nil = no fork, 0 = already homestead)
+	HomesteadBlock *big.Int `json:"homesteadBlock,omitempty"` // Homestead 切換塊（nil = 沒有分叉，0 = 已經 Homestead）
 
-	DAOForkBlock   *big.Int `json:"daoForkBlock,omitempty"`   // TheDAO hard-fork switch block (nil = no fork)
-	DAOForkSupport bool     `json:"daoForkSupport,omitempty"` // Whether the nodes supports or opposes the DAO hard-fork
+	DAOForkBlock   *big.Int `json:"daoForkBlock,omitempty"`   // TheDAO 硬分叉開關塊（nil = 無分叉）
+	DAOForkSupport bool     `json:"daoForkSupport,omitempty"` // 節點是否支持或反對DAO硬分叉
 
 	// EIP150 implements the Gas price changes (https://github.com/ethereum/EIPs/issues/150)
 	EIP150Block *big.Int `json:"eip150Block,omitempty"` // EIP150 HF block (nil = no fork)
@@ -381,16 +365,16 @@ type CliqueConfig struct {
 	Epoch  uint64 `json:"epoch"`  // Epoch length to reset votes and checkpoint
 }
 
-// String implements the stringer interface, returning the consensus engine details.
+// String 實作 stringer 接口，傳回共識引擎詳細資料。
 func (c *CliqueConfig) String() string {
 	return "clique"
 }
 
-// Description returns a human-readable description of ChainConfig.
+// 描述返回 ChainConfig 的人類可讀描述。
 func (c *ChainConfig) Description() string {
 	var banner string
 
-	// Create some basic network config output
+	// 創建一些基本的網路配置輸出
 	network := NetworkNames[c.ChainID.String()]
 	if network == "" {
 		network = "unknown"
@@ -399,28 +383,28 @@ func (c *ChainConfig) Description() string {
 	switch {
 	case c.Ethash != nil:
 		if c.TerminalTotalDifficulty == nil {
-			banner += "Consensus: Ethash (proof-of-work)\n"
+			banner += "共識: Ethash (proof-of-work)\n"
 		} else if !c.TerminalTotalDifficultyPassed {
-			banner += "Consensus: Beacon (proof-of-stake), merging from Ethash (proof-of-work)\n"
+			banner += "共識: Beacon (proof-of-stake), 從 Ethash 合併 (proof-of-work)\n"
 		} else {
-			banner += "Consensus: Beacon (proof-of-stake), merged from Ethash (proof-of-work)\n"
+			banner += "共識: Beacon (proof-of-stake), 從 Ethash 合併 (proof-of-work)\n"
 		}
 	case c.Clique != nil:
 		if c.TerminalTotalDifficulty == nil {
-			banner += "Consensus: Clique (proof-of-authority)\n"
+			banner += "共識: Clique (proof-of-authority)\n"
 		} else if !c.TerminalTotalDifficultyPassed {
-			banner += "Consensus: Beacon (proof-of-stake), merging from Clique (proof-of-authority)\n"
+			banner += "共識: Beacon (proof-of-stake), merging from Clique (proof-of-authority)\n"
 		} else {
-			banner += "Consensus: Beacon (proof-of-stake), merged from Clique (proof-of-authority)\n"
+			banner += "共識: Beacon (proof-of-stake), merged from Clique (proof-of-authority)\n"
 		}
 	default:
-		banner += "Consensus: unknown\n"
+		banner += "共識: unknown\n"
 	}
 	banner += "\n"
 
-	// Create a list of forks with a short description of them. Forks that only
-	// makes sense for mainnet should be optional at printing to avoid bloating
-	// the output for testnets and private networks.
+    //建立一個分叉清單並附上它們的簡短描述。
+	//對於主網來說，在列印時應該是可選的以避免膨脹是有意義的
+	//測試網和專用網路的輸出。
 	banner += "Pre-Merge hard forks (block based):\n"
 	banner += fmt.Sprintf(" - Homestead:                   #%-8v (https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/homestead.md)\n", c.HomesteadBlock)
 	if c.DAOForkBlock != nil {
@@ -446,23 +430,23 @@ func (c *ChainConfig) Description() string {
 	}
 	banner += "\n"
 
-	// Add a special section for the merge as it's non-obvious
+	// 為合併添加一個特殊部分，因為它不明顯
 	if c.TerminalTotalDifficulty == nil {
-		banner += "The Merge is not yet available for this network!\n"
-		banner += " - Hard-fork specification: https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/paris.md\n"
+		banner += "此網路尚不支援合併!\n"
+		banner += " - 硬分叉規範: https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/paris.md\n"
 	} else {
-		banner += "Merge configured:\n"
-		banner += " - Hard-fork specification:    https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/paris.md\n"
-		banner += fmt.Sprintf(" - Network known to be merged: %v\n", c.TerminalTotalDifficultyPassed)
-		banner += fmt.Sprintf(" - Total terminal difficulty:  %v\n", c.TerminalTotalDifficulty)
+		banner += "合併已配置:\n"
+		banner += " - 硬分叉規範:    https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/paris.md\n"
+		banner += fmt.Sprintf(" - 已知要合併的網絡: %v\n", c.TerminalTotalDifficultyPassed)
+		banner += fmt.Sprintf(" - 終端總難度:  %v\n", c.TerminalTotalDifficulty)
 		if c.MergeNetsplitBlock != nil {
-			banner += fmt.Sprintf(" - Merge netsplit block:       #%-8v\n", c.MergeNetsplitBlock)
+			banner += fmt.Sprintf(" - 合併netsplit區塊:       #%-8v\n", c.MergeNetsplitBlock)
 		}
 	}
 	banner += "\n"
 
-	// Create a list of forks post-merge
-	banner += "Post-Merge hard forks (timestamp based):\n"
+	// 合併後建立分叉列表
+	banner += "合併後硬分叉（基於時間戳）:\n"
 	if c.ShanghaiTime != nil {
 		banner += fmt.Sprintf(" - Shanghai:                    @%-10v (https://github.com/ethereum/execution-specs/blob/master/network-upgrades/mainnet-upgrades/shanghai.md)\n", *c.ShanghaiTime)
 	}
@@ -478,49 +462,49 @@ func (c *ChainConfig) Description() string {
 	return banner
 }
 
-// IsHomestead returns whether num is either equal to the homestead block or greater.
+// Is Homestead 傳回 number 是否等於或大於 homestead 區塊。
 func (c *ChainConfig) IsHomestead(num *big.Int) bool {
 	return isBlockForked(c.HomesteadBlock, num)
 }
 
-// IsDAOFork returns whether num is either equal to the DAO fork block or greater.
+// IsDAO Fork 傳回 number 是否等於或大於 DAO fork 區塊。
 func (c *ChainConfig) IsDAOFork(num *big.Int) bool {
 	return isBlockForked(c.DAOForkBlock, num)
 }
 
-// IsEIP150 returns whether num is either equal to the EIP150 fork block or greater.
+// IsEIP150 傳回 number 是否等於或大於 EIP 150 分叉區塊。
 func (c *ChainConfig) IsEIP150(num *big.Int) bool {
 	return isBlockForked(c.EIP150Block, num)
 }
 
-// IsEIP155 returns whether num is either equal to the EIP155 fork block or greater.
+// EIP155 傳回 number 是否等於或大於 EIP155 分叉區塊。
 func (c *ChainConfig) IsEIP155(num *big.Int) bool {
 	return isBlockForked(c.EIP155Block, num)
 }
 
-// IsEIP158 returns whether num is either equal to the EIP158 fork block or greater.
+// IsEOP 158 傳回 number 是否等於或大於 EIP 158 分叉區塊。
 func (c *ChainConfig) IsEIP158(num *big.Int) bool {
 	return isBlockForked(c.EIP158Block, num)
 }
 
-// IsByzantium returns whether num is either equal to the Byzantium fork block or greater.
+// Is Byzantium 傳回 number 是否等於或大於拜占庭分叉塊。
 func (c *ChainConfig) IsByzantium(num *big.Int) bool {
 	return isBlockForked(c.ByzantiumBlock, num)
 }
 
-// IsConstantinople returns whether num is either equal to the Constantinople fork block or greater.
+// Is Constantinople 傳回 number 是否等於或大於君士坦丁堡分叉塊。
 func (c *ChainConfig) IsConstantinople(num *big.Int) bool {
 	return isBlockForked(c.ConstantinopleBlock, num)
 }
 
-// IsMuirGlacier returns whether num is either equal to the Muir Glacier (EIP-2384) fork block or greater.
+// Is Muir Glacier 傳回 number 是否等於 Muir Glacier (EIP-2384) 叉塊或更大。
 func (c *ChainConfig) IsMuirGlacier(num *big.Int) bool {
 	return isBlockForked(c.MuirGlacierBlock, num)
 }
 
-// IsPetersburg returns whether num is either
-// - equal to or greater than the PetersburgBlock fork block,
-// - OR is nil, and Constantinople is active
+//Is Petersburg 傳回數字是否為其中之一
+//-等於或大於Petersburg Block叉塊，
+//-OR 為零，君士坦丁堡處於活動狀態
 func (c *ChainConfig) IsPetersburg(num *big.Int) bool {
 	return isBlockForked(c.PetersburgBlock, num) || c.PetersburgBlock == nil && isBlockForked(c.ConstantinopleBlock, num)
 }

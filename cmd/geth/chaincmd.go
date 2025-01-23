@@ -1,18 +1,4 @@
-// Copyright 2015 The go-ethereum Authors
-// This file is part of go-ethereum.
-//
-// go-ethereum is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// go-ethereum is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with go-ethereum. If not, see <http://www.gnu.org/licenses/>.
+
 
 package main
 
@@ -417,11 +403,11 @@ func importHistory(ctx *cli.Context) error {
 		network string
 	)
 
-	// Determine network.
+	// 確定網路。
 	if utils.IsNetworkPreset(ctx) {
 		switch {
 		case ctx.Bool(utils.MainnetFlag.Name):
-			network = "mainnet"
+			network = "BearNetworkChain MainNet"
 		case ctx.Bool(utils.SepoliaFlag.Name):
 			network = "sepolia"
 		case ctx.Bool(utils.GoerliFlag.Name):
@@ -434,17 +420,17 @@ func importHistory(ctx *cli.Context) error {
 		for _, n := range params.NetworkNames {
 			entries, err := era.ReadDir(dir, n)
 			if err != nil {
-				return fmt.Errorf("error reading %s: %w", dir, err)
+				return fmt.Errorf("讀取錯誤 %s: %w", dir, err)
 			}
 			if len(entries) > 0 {
 				networks = append(networks, n)
 			}
 		}
 		if len(networks) == 0 {
-			return fmt.Errorf("no era1 files found in %s", dir)
+			return fmt.Errorf("找不到era1文件 %s", dir)
 		}
 		if len(networks) > 1 {
-			return fmt.Errorf("multiple networks found, use a network flag to specify desired network")
+			return fmt.Errorf("找到多個網絡，使用網絡標誌來指定所需的網絡")
 		}
 		network = networks[0]
 	}
@@ -452,7 +438,7 @@ func importHistory(ctx *cli.Context) error {
 	if err := utils.ImportHistory(chain, db, dir, network); err != nil {
 		return err
 	}
-	fmt.Printf("Import done in %v\n", time.Since(start))
+	fmt.Printf("導入完成於 %v\n", time.Since(start))
 	return nil
 }
 

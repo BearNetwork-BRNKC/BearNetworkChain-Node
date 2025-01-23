@@ -183,7 +183,7 @@ $ cat ~/.clef/02f90c0603f4f2f60188/config.json
 In `$HOME/.clef`, the `masterseed.json` file was created, containing the master seed. This seed was then used to derive a few other things:
 
 - **Vault location**: in this case `02f90c0603f4f2f60188`.
-   - If you use a different master seed, a different vault location will be used that does not conflict with each other (e.g. `clef --signersecret /path/to/file`). This allows you to run multiple instances of Clef, each with its own rules (e.g. mainnet + testnet).
+   - If you use a different master seed, a different vault location will be used that does not conflict with each other (e.g. `clef --signersecret /path/to/file`). This allows you to run multiple instances of Clef, each with its own rules (e.g. BearNetworkChain MainNet + testnet).
 - **`config.json`**: the encrypted key/value storage for configuration data, currently only containing the key `ruleset_sha256`, the attested hash of the automatic rules to use.
 
 ## Advanced rules

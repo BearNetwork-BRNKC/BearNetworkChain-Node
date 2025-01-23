@@ -1,18 +1,4 @@
-// Copyright 2022 The go-ethereum Authors
-// This file is part of the go-ethereum library.
-//
-// The go-ethereum library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// The go-ethereum library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public License
-// along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
+
 
 package engine
 
@@ -21,8 +7,8 @@ import (
 	"github.com/ethereum/go-ethereum/rpc"
 )
 
-// EngineAPIError is a standardized error message between consensus and execution
-// clients, also containing any custom error message Geth might include.
+//EngineAPIError是共識和執行之間的標準化錯誤訊息
+//用戶端，也包含 Geth 可能包含的任何自訂錯誤訊息。
 type EngineAPIError struct {
 	code int
 	msg  string
@@ -40,7 +26,7 @@ func (e *EngineAPIError) ErrorData() interface{} {
 	}{e.err.Error()}
 }
 
-// With returns a copy of the error with a new embedded custom data field.
+// With 傳回帶有​​新的嵌入自訂資料欄位的錯誤副本。
 func (e *EngineAPIError) With(err error) *EngineAPIError {
 	return &EngineAPIError{
 		code: e.code,
@@ -55,32 +41,32 @@ var (
 )
 
 var (
-	// VALID is returned by the engine API in the following calls:
-	//   - newPayloadV1:       if the payload was already known or was just validated and executed
-	//   - forkchoiceUpdateV1: if the chain accepted the reorg (might ignore if it's stale)
+    //引擎 API 在以下呼叫中傳回 VALID：
+	//-newPayloadV1：如果有效負載已知或剛剛驗證並執行
+	//-forkchoiceUpdateV1：如果鏈接受重組（如果它是陳舊的，可能會忽略）
 	VALID = "VALID"
 
-	// INVALID is returned by the engine API in the following calls:
-	//   - newPayloadV1:       if the payload failed to execute on top of the local chain
-	//   - forkchoiceUpdateV1: if the new head is unknown, pre-merge, or reorg to it fails
+    //在以下呼叫中引擎 API 傳回 INVALID：
+	//-newPayloadV1：如果有效負載無法在本機鏈頂部執行
+	//-forkchoiceUpdateV1：如果新頭未知，則預合併或重組失敗
 	INVALID = "INVALID"
 
-	// SYNCING is returned by the engine API in the following calls:
-	//   - newPayloadV1:       if the payload was accepted on top of an active sync
-	//   - forkchoiceUpdateV1: if the new head was seen before, but not part of the chain
+    //SYNCING 由引擎 API 在以下呼叫中傳回：
+	//-newPayloadV1：如果在活動同步之上接受有效負載
+	//-forkchoiceUpdateV1：如果新的頭之前已經見過，但不是鏈的一部分
 	SYNCING = "SYNCING"
 
-	// ACCEPTED is returned by the engine API in the following calls:
-	//   - newPayloadV1: if the payload was accepted, but not processed (side chain)
+    //ACCEPTED 由引擎 API 在以下呼叫中傳回：
+	//-newPayloadV1：如果有效負載被接受，但未處理（側鏈）
 	ACCEPTED = "ACCEPTED"
 
-	GenericServerError       = &EngineAPIError{code: -32000, msg: "Server error"}
-	UnknownPayload           = &EngineAPIError{code: -38001, msg: "Unknown payload"}
-	InvalidForkChoiceState   = &EngineAPIError{code: -38002, msg: "Invalid forkchoice state"}
-	InvalidPayloadAttributes = &EngineAPIError{code: -38003, msg: "Invalid payload attributes"}
-	TooLargeRequest          = &EngineAPIError{code: -38004, msg: "Too large request"}
-	InvalidParams            = &EngineAPIError{code: -32602, msg: "Invalid parameters"}
-	UnsupportedFork          = &EngineAPIError{code: -38005, msg: "Unsupported fork"}
+	GenericServerError       = &EngineAPIError{code: -32000, msg: "伺服器錯誤"}
+	UnknownPayload           = &EngineAPIError{code: -38001, msg: "未知有效負載"}
+	InvalidForkChoiceState   = &EngineAPIError{code: -38002, msg: "無效的 forkchoice 狀態"}
+	InvalidPayloadAttributes = &EngineAPIError{code: -38003, msg: "無效負載屬性"}
+	TooLargeRequest          = &EngineAPIError{code: -38004, msg: "請求太大"}
+	InvalidParams            = &EngineAPIError{code: -32602, msg: "無效參數"}
+	UnsupportedFork          = &EngineAPIError{code: -38005, msg: "無支撐前叉"}
 
 	STATUS_INVALID         = ForkChoiceResponse{PayloadStatus: PayloadStatusV1{Status: INVALID}, PayloadID: nil}
 	STATUS_SYNCING         = ForkChoiceResponse{PayloadStatus: PayloadStatusV1{Status: SYNCING}, PayloadID: nil}

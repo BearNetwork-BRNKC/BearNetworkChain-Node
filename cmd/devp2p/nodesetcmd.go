@@ -228,7 +228,7 @@ func minAgeFilter(args []string) (nodeFilter, error) {
 func ethFilter(args []string) (nodeFilter, error) {
 	var filter forkid.Filter
 	switch args[0] {
-	case "mainnet":
+	case "BearNetworkChain MainNet":
 		filter = forkid.NewStaticFilter(params.MainnetChainConfig, core.DefaultGenesisBlock().ToBlock())
 	case "goerli":
 		filter = forkid.NewStaticFilter(params.GoerliChainConfig, core.DefaultGoerliGenesisBlock().ToBlock())
